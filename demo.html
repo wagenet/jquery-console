@@ -45,9 +45,10 @@
           commandHandle:function(line){
             try {
               var ret = eval(line);
-              if (typeof ret != 'undefined') return ret.toString();
-              else return true;
-            } catch (e) { return e.toString(); }
+              return (typeof ret != 'undefined') ? ret.toString() : true;
+            } catch (e) {
+              return { msg: e.toString(), className: "jquery-console-message-error" };
+            }
           },
           animateScroll:true,
           promptHistory:true,

@@ -450,7 +450,7 @@
                     }
                 } else if (typeof ret == "string") {
                     commandResult(ret,"jquery-console-message-success");
-                } else if (typeof ret == 'object' && ret.length) {
+                } else if (typeof ret == 'object') {
                     commandResult(ret);
                 } else if (extern.continuedPrompt) {
                     commandResult();
@@ -474,13 +474,17 @@
         function commandResult(msg,className) {
             column = -1;
             updatePromptDisplay();
-            if (typeof msg == 'string') {
+            if (typeof msg === 'string') {
                 message(msg,className);
             } else {
-                for (var x in msg) {
-                    var ret = msg[x];
-                    message(ret.msg,ret.className);
-                }
+                if (msg.constructor === Array) {
+                  for (var idx=0,len=msg.length; idx < len; idx++) {
+                      var ret = msg[idx];
+                      message(ret.msg,ret.className);
+                  }
+               } else {
+                 message(msg.msg, msg.className)
+               }
             }
             newPromptBox();
         };
