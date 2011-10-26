@@ -37,6 +37,9 @@
 //   Safari 4.0.5 (6531.22.7) (Mac)
 //   Google Chrome 5.0.375.55 (Mac)
 
+// REQUIREMENTS
+//   jQuery 1.6+
+
 (function($){
     $.fn.console = function(config){
         ////////////////////////////////////////////////////////////////////////
@@ -413,7 +416,7 @@
 
         // Scroll to the bottom of the view
         function scrollToBottom() {
-            inner.attr({ scrollTop: inner.attr("scrollHeight") });;
+            inner.prop({ scrollTop: inner.prop("scrollHeight") });;
         };
 
         function cancelExecution() {
