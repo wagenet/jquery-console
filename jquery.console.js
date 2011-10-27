@@ -97,7 +97,7 @@
     // Opera only works with this character, not <wbr> or &shy;,
     // but IE6 displays this character, which is bad, so just use
     // it on Opera.
-    var wbr = $.browser.opera? '' : '<wbr>&shy;';
+    var wbr = $.browser.opera ? '' : '<wbr>&shy;';
 
     ////////////////////////////////////////////////////////////////////////
     // Globals
@@ -109,9 +109,9 @@
     // Prompt
     var promptBox;
     var prompt;
-    var promptLabel = config && config.promptLabel? config.promptLabel : "> ";
-    var continuedPromptLabel = config && config.continuedPromptLabel?
-    config.continuedPromptLabel : "> ";
+    var promptLabel = config && config.promptLabel ? config.promptLabel : "> ";
+    var continuedPromptLabel = config && config.continuedPromptLabel ?
+                                  config.continuedPromptLabel : "> ";
     var column = 0;
     var promptText = '';
     var restoreText = '';
@@ -141,8 +141,9 @@
       container.append(inner);
       inner.append(typer);
       typer.css({position:'absolute',top:0,left:'-9999px'});
-      if (config.welcomeMessage)
+      if (config.welcomeMessage) {
         message(config.welcomeMessage,'jquery-console-welcome');
+      }
       newPromptBox();
       if (config.autofocus) {
         inner.addClass('jquery-console-focus');
@@ -160,7 +161,7 @@
     ////////////////////////////////////////////////////////////////////////
     // Reset terminal
     extern.reset = function(){
-      var welcome = (typeof config.welcomeMessage != 'undefined');
+      var welcome = (typeof config.welcomeMessage !== 'undefined');
       inner.parent().fadeOut(function(){
         inner.find('div').each(function(){
           if (!welcome) {
@@ -181,25 +182,30 @@
     // Reset terminal
     extern.notice = function(msg,style){
       var n = $('<div class="notice"></div>').append($('<div></div>').text(msg))
-        .css({visibility:'hidden'});
+                                             .css({visibility:'hidden'});
       container.append(n);
       var focused = true;
-      if (style=='fadeout')
+      if (style === 'fadeout') {
         setTimeout(function(){
           n.fadeOut(function(){
             n.remove();
           });
         },4000);
-      else if (style=='prompt') {
+      } else if (style === 'prompt') {
         var a = $('<br/><div class="action"><a href="javascript:">OK</a><div class="clear"></div></div>');
         n.append(a);
         focused = false;
-        a.click(function(){ n.fadeOut(function(){ n.remove();inner.css({opacity:1}) }); });
+        a.click(function(){
+          n.fadeOut(function(){
+            n.remove();
+            inner.css({opacity:1});
+          });
+        });
       }
       var h = n.height();
       n.css({height:'0px',visibility:'visible'})
-        .animate({height:h+'px'},function(){
-          if (!focused) inner.css({opacity:0.5});
+       .animate({height:h+'px'}, function(){
+         if (!focused) { inner.css({opacity:0.5}); }
         });
       n.css('cursor','default');
       return n;
@@ -221,7 +227,7 @@
       promptBox.append(prompt);
       inner.append(promptBox);
       updatePromptDisplay();
-    };
+    }
 
     ////////////////////////////////////////////////////////////////////////
     // Handle setting focus
@@ -262,7 +268,7 @@
       cancelKeyPress = 0;
       var keyCode = e.keyCode;
       // C-c: cancel the execution
-      if(e.ctrlKey && keyCode == 67) {
+      if(e.ctrlKey && keyCode === 67) {
         cancelKeyPress = keyCode;
         cancelExecution();
         return false;
@@ -292,34 +298,35 @@
         return false;
       }
       // // C-v: don't insert on paste event
-      if (e.ctrlKey && String.fromCharCode(keyCode).toLowerCase() == 'v') {
+      if (e.ctrlKey && String.fromCharCode(keyCode).toLowerCase() === 'v') {
         return true;
       }
-      if (acceptInput && cancelKeyPress != keyCode && keyCode >= 32){
-        if (cancelKeyPress) return false;
-        if (typeof config.charInsertTrigger == 'undefined' ||
-          (typeof config.charInsertTrigger == 'function' &&
-           config.charInsertTrigger(keyCode,promptText)))
+      if (acceptInput && cancelKeyPress !== keyCode && keyCode >= 32){
+        if (cancelKeyPress) { return false; }
+        if (typeof config.charInsertTrigger === 'undefined' ||
+              (typeof config.charInsertTrigger === 'function' &&
+                config.charInsertTrigger(keyCode,promptText))) {
           typer.consoleInsert(keyCode);
+        }
       }
-      if ($.browser.webkit) return false;
+      if ($.browser.webkit) { return false; }
     });
 
     function isIgnorableKey(e) {
       // for now just filter alt+tab that we receive on some platforms when
       // user switches windows (goes away from the browser)
-      return ((e.keyCode == keyCodes.tab || e.keyCode == 192) && e.altKey);
-    };
+      return ((e.keyCode === keyCodes.tab || e.keyCode === 192) && e.altKey);
+    }
 
     ////////////////////////////////////////////////////////////////////////
     // Rotate through the command history
     function rotateHistory(n){
-      if (history.length == 0) return;
+      if (history.length === 0) { return; }
       ringn += n;
-      if (ringn < 0) ringn = history.length;
-      else if (ringn > history.length) ringn = 0;
+      if (ringn < 0) { ringn = history.length; }
+      else if (ringn > history.length) { ringn = 0; }
       var prevText = promptText;
-      if (ringn == 0) {
+      if (ringn === 0) {
         promptText = restoreText;
       } else {
         promptText = history[ringn - 1];
@@ -327,28 +334,28 @@
       if (config.historyPreserveColumn) {
         if (promptText.length < column + 1) {
           column = promptText.length;
-        } else if (column == 0) {
+        } else if (column === 0) {
           column = promptText.length;
         }
       } else {
         column = promptText.length;
       }
       updatePromptDisplay();
-    };
+    }
 
     function previousHistory() {
       rotateHistory(-1);
-    };
+    }
 
     function nextHistory() {
       rotateHistory(1);
-    };
+    }
 
     // Add something to the history ring
     function addToHistory(line){
       history.push(line);
       restoreText = '';
-    };
+    }
 
     // Delete the character at the current position
     function deleteCharAtPos(){
@@ -358,51 +365,52 @@
           promptText.substring(column+1);
         restoreText = promptText;
         return true;
-      } else return false;
-    };
+      } else {
+        return false;
+      }
+    }
 
     function backDelete() {
       if (moveColumn(-1)){
         deleteCharAtPos();
         updatePromptDisplay();
       }
-    };
+    }
 
     function forwardDelete() {
-      if (deleteCharAtPos())
-        updatePromptDisplay();
-    };
+      if (deleteCharAtPos()) { updatePromptDisplay(); }
+    }
 
     function deleteUntilEnd() {
       while(deleteCharAtPos()) {
         updatePromptDisplay();
       }
-    };
+    }
 
     function deleteNextWord() {
       // A word is defined within this context as a series of alphanumeric
       // characters.
       // Delete up to the next alphanumeric character
       while(column < promptText.length &&
-          !isCharAlphanumeric(promptText[column])) {
+            !isCharAlphanumeric(promptText[column])) {
         deleteCharAtPos();
         updatePromptDisplay();
       }
       // Then, delete until the next non-alphanumeric character
       while(column < promptText.length &&
-          isCharAlphanumeric(promptText[column])) {
+            isCharAlphanumeric(promptText[column])) {
         deleteCharAtPos();
         updatePromptDisplay();
       }
-    };
+    }
 
     ////////////////////////////////////////////////////////////////////////
     // Validate command and trigger it if valid, or show a validation error
     function commandTrigger() {
       var line = promptText;
-      if (typeof config.commandValidate == 'function') {
+      if (typeof config.commandValidate === 'function') {
         var ret = config.commandValidate(line);
-        if (ret == true || ret == false) {
+        if (ret === true || ret === false) {
           if (ret) {
             handleCommand();
           }
@@ -412,15 +420,15 @@
       } else {
         handleCommand();
       }
-    };
+    }
 
     // Scroll to the bottom of the view
     function scrollToBottom() {
-      inner.prop({ scrollTop: inner.prop("scrollHeight") });;
-    };
+      inner.prop({ scrollTop: inner.prop("scrollHeight") });
+    }
 
     function cancelExecution() {
-      if(typeof config.cancelHandle == 'function') {
+      if(typeof config.cancelHandle === 'function') {
         config.cancelHandle();
       }
     }
@@ -428,22 +436,27 @@
     ////////////////////////////////////////////////////////////////////////
     // Handle a command
     function handleCommand() {
-      if (typeof config.commandHandle == 'function') {
+      if (typeof config.commandHandle === 'function') {
         disableInput();
         addToHistory(promptText);
         var text = promptText;
         if (extern.continuedPrompt) {
-          if (continuedText)
-          continuedText += '\n' + promptText;
-          else continuedText = promptText;
-        } else continuedText = undefined;
-        if (continuedText) text = continuedText;
+          if (continuedText) {
+            continuedText += '\n' + promptText;
+          } else {
+            continuedText = promptText;
+          }
+        } else {
+          continuedText = undefined;
+        }
+        if (continuedText) { text = continuedText; }
         var ret = config.commandHandle(text,function(msgs){
           commandResult(msgs);
         });
-        if (extern.continuedPrompt && !continuedText)
+        if (extern.continuedPrompt && !continuedText) {
           continuedText = promptText;
-        if (typeof ret == 'boolean') {
+        }
+        if (typeof ret === 'boolean') {
           if (ret) {
             // Command succeeded without a result.
             commandResult();
@@ -451,21 +464,21 @@
             commandResult('Command failed.',
                     "jquery-console-message-error");
           }
-        } else if (typeof ret == "string") {
+        } else if (typeof ret === "string") {
           commandResult(ret,"jquery-console-message-success");
-        } else if (typeof ret == 'object') {
+        } else if (typeof ret === 'object') {
           commandResult(ret);
         } else if (extern.continuedPrompt) {
           commandResult();
         }
       }
-    };
+    }
 
     ////////////////////////////////////////////////////////////////////////
     // Disable input
     function disableInput() {
       acceptInput = false;
-    };
+    }
 
     // Enable input
     function enableInput() {
@@ -485,22 +498,22 @@
             var ret = msg[idx];
             message(ret.msg,ret.className);
           }
-         } else {
-         message(msg.msg, msg.className)
-         }
+        } else {
+          message(msg.msg, msg.className);
+        }
       }
       newPromptBox();
-    };
+    }
 
     ////////////////////////////////////////////////////////////////////////
     // Display a message
     function message(msg,className) {
       var mesg = $('<div class="jquery-console-message"></div>');
-      if (className) mesg.addClass(className);
+      if (className) { mesg.addClass(className); }
       mesg.filledText(msg).hide();
       inner.append(mesg);
       mesg.show();
-    };
+    }
 
     ////////////////////////////////////////////////////////////////////////
     // Handle normal character insertion
@@ -524,8 +537,8 @@
       if (column + n >= 0 && column + n <= promptText.length){
         column += n;
         return true;
-      } else return false;
-    };
+      } else { return false; }
+    }
 
     function moveForward() {
       if(moveColumn(1)) {
@@ -533,7 +546,7 @@
         return true;
       }
       return false;
-    };
+    }
 
     function moveBackward() {
       if(moveColumn(-1)) {
@@ -541,53 +554,55 @@
         return true;
       }
       return false;
-    };
+    }
 
     function moveToStart() {
-      if (moveColumn(-column))
-        updatePromptDisplay();
-    };
+      if (moveColumn(-column)) { updatePromptDisplay(); }
+    }
 
     function moveToEnd() {
-      if (moveColumn(promptText.length-column))
-        updatePromptDisplay();
-    };
+      if (moveColumn(promptText.length-column)) { updatePromptDisplay(); }
+    }
 
     function moveToNextWord() {
       while(column < promptText.length &&
           !isCharAlphanumeric(promptText[column]) &&
           moveForward()) {
+        // Intentionally empty
       }
       while(column < promptText.length &&
           isCharAlphanumeric(promptText[column]) &&
           moveForward()) {
+        // Intentionally empty
       }
-    };
+    }
 
     function moveToPreviousWord() {
       // Move backward until we find the first alphanumeric
       while(column -1 >= 0 &&
           !isCharAlphanumeric(promptText[column-1]) &&
           moveBackward()) {
+        // Intentionally empty
       }
       // Move until we find the first non-alphanumeric
       while(column -1 >= 0 &&
           isCharAlphanumeric(promptText[column-1]) &&
           moveBackward()) {
+        // Intentionally empty
       }
-    };
+    }
 
     function isCharAlphanumeric(charToTest) {
-      if(typeof charToTest == 'string') {
+      if(typeof charToTest === 'string') {
         var code = charToTest.charCodeAt();
         return (code >= 'A'.charCodeAt() && code <= 'Z'.charCodeAt()) ||
             (code >= 'a'.charCodeAt() && code <= 'z'.charCodeAt()) ||
             (code >= '0'.charCodeAt() && code <= '9'.charCodeAt());
       }
       return false;
-    };
+    }
 
-    function doNothing() {};
+    function doNothing(){}
 
     extern.promptText = function(text){
       if (text) {
@@ -603,10 +618,10 @@
     function updatePromptDisplay(){
       var line = promptText;
       var html = '';
-      if (column > 0 && line == ''){
+      if (column > 0 && line === ''){
         // When we have an empty line just display a cursor.
         html = cursor;
-      } else if (column == promptText.length){
+      } else if (column === promptText.length){
         // We're at the end of the line, so we need to display
         // the text *and* cursor.
         html = htmlEncode(line) + cursor;
@@ -626,7 +641,7 @@
       }
       prompt.html(html);
       scrollToBottom();
-    };
+    }
 
     // Simple HTML encoding
     // Simply replace '<', '>' and '&'
@@ -641,7 +656,7 @@
           .replace(/\n/g,'<br />')
           .replace(/([^<>&]{10})/g,'$1' + wbr)
       );
-    };
+    }
 
     return extern;
   };
